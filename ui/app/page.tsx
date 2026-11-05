@@ -70,24 +70,24 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center p-4">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
+    <main style={{ minHeight: '100vh', backgroundColor: '#0a0a0a', color: '#ffffff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />
 
-      <div className="z-10 w-full max-w-2xl p-8 bg-black/70 backdrop-blur-lg border border-gray-800 rounded-2xl shadow-2xl">
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+      <div style={{ zIndex: 10, width: '100%', maxWidth: '650px', backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(16px)', border: '1px solid #333', borderRadius: '24px', padding: '40px', boxShadow: '0 0 40px rgba(0,0,0,0.8)' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0, background: 'linear-gradient(to right, #60a5fa, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             VARIENTROPY
           </h1>
-          <p className="mt-2 text-gray-400 font-mono">H(X) - I(X;Y) + Var(f)</p>
+          <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.1rem' }}>H(X) - I(X;Y) + Var(f)</p>
         </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-300">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <label style={{ fontSize: '0.9rem', color: '#d1d5db', fontWeight: 500 }}>
             Enter your research query:
           </label>
           <textarea 
-            className="w-full bg-black/50 text-white border border-gray-700 rounded-lg p-4 focus:ring-2 focus:ring-blue-500 outline-none transition font-mono"
-            rows={2}
+            style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
+            rows={3}
             placeholder="e.g. Analyze entropy in high-frequency trading data..."
             value={hypothesis}
             onChange={(e) => setHypothesis(e.target.value)}
@@ -96,37 +96,36 @@ export default function Home() {
           <button 
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+            style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 20px rgba(37,99,235,0.3)', transition: 'all 0.2s' }}
           >
-            {loading ? "Generating Proof..." : "Run VDG Algorithm"}
+            {loading ? "Calculating Qubit Alignment..." : "Run VDG Algorithm"}
           </button>
         </div>
 
         {result && (
-          <div className="mt-8 border-t border-gray-800 pt-6 animate-fade-in">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-green-400">V-ML Attestation</h2>
+          <div style={{ marginTop: '32px', borderTop: '1px solid #333', paddingTop: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#4ade80', margin: 0 }}>V-ML Attestation</h2>
               <button 
                 onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
-                className="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-gray-300"
+                style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
               >
                 Copy JSON for AI
               </button>
             </div>
             
-            <div className="p-4 bg-black/80 rounded-lg border border-green-900/50 space-y-3 font-mono text-sm relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-              <div className="flex justify-between items-center border-b border-gray-800 pb-2">
-                <span className="text-gray-400">Divergence:</span>
-                <span className="text-blue-400 font-bold text-lg">{result.metrics.divergence_score}</span>
+            <div style={{ backgroundColor: 'rgba(0,0,0,0.9)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.9rem', boxShadow: '0 0 15px rgba(74, 222, 128, 0.1)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid #1f2937' }}>
+                <span style={{ color: '#9ca3af' }}>Divergence Score:</span>
+                <span style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: '1.2rem' }}>{result.metrics?.divergence_score || result.divergence_score}</span>
               </div>
-              <div className="flex flex-col gap-1 border-b border-gray-800 pb-2">
-                <span className="text-gray-400">SHA-256 Proof:</span>
-                <span className="text-gray-300 break-all text-xs">{result.cryptographic_proof.hash}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px 0', borderBottom: '1px solid #1f2937' }}>
+                <span style={{ color: '#9ca3af' }}>SHA-256 Cryptographic Proof:</span>
+                <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.75rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash || result.sha256_hash}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Status:</span>
-                <span className="text-green-400 text-xs">Mathematically Validated</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
+                <span style={{ color: '#9ca3af' }}>Status:</span>
+                <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Mathematically Validated</span>
               </div>
             </div>
           </div>

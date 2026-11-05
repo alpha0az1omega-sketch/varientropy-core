@@ -42,10 +42,9 @@ export default function Home() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(96, 165, 250, 0.6)'; // Bleu
+        ctx.fillStyle = 'rgba(96, 165, 250, 0.6)';
         ctx.fill();
 
-        // Connexions quantiques
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -53,7 +52,7 @@ export default function Home() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(168, 85, 247, ${1 - dist / 120})`; // Violet
+            ctx.strokeStyle = `rgba(168, 85, 247, ${1 - dist / 120})`;
             ctx.stroke();
           }
         }
@@ -65,24 +64,33 @@ export default function Home() {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
+  // 🚀 Connexion à l'API
   const handleGenerate = async () => {
+    if (!hypothesis) return;
     setLoading(true);
-    setTimeout(() => {
-      setResult([
-        { id: 1, text: "Quantum alignment detected in market microstructure", score: 0.94 },
-        { id: 2, text: "High entropy divergence in option pricing", score: 0.87 }
-      ]);
+    setResult(null);
+
+    try {
+      const response = await fetch('/api/vdg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: hypothesis })
+      });
+      
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
     <main className="relative min-h-screen bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center">
-      {/* L'interface visuelle en arrière-plan */}
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
-      {/* Le contenu par-dessus */}
-      <div className="z-10 w-full max-w-2xl p-8 bg-black/40 backdrop-blur-md border border-gray-800 rounded-2xl shadow-2xl">
+      <div className="z-10 w-full max-w-2xl p-8 bg-black/60 backdrop-blur-md border border-gray-800 rounded-2xl shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
             VARIENTROPY
@@ -113,15 +121,25 @@ export default function Home() {
 
         {result && (
           <div className="mt-8 border-t border-gray-800 pt-6">
-            <h2 className="text-xl font-bold mb-4 text-green-400">Divergence Results</h2>
-            <ul className="space-y-3">
-              {result.map((item: any) => (
-                <li key={item.id} className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-gray-800">
-                  <span className="text-gray-300">{item.text}</span>
-                  <span className="font-mono text-blue-400 font-bold bg-blue-900/30 px-2 py-1 rounded">{item.score}</span>
-                </li>
-              ))}
-            </ul>
+            <h2 className="text-xl font-bold mb-4 text-green-400">Cryptographic Proof</h2>
+            <div className="p-4 bg-white/5 rounded-lg border border-gray-800 space-y-3 font-mono text-sm">
+              <div className="flex justify-between items-center border-b border-gray-800 pb-2">
+                <span className="text-gray-400">Status:</span>
+                <span className="text-green-400 font-bold">{result.status}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-gray-800 pb-2">
+                <span className="text-gray-400">Divergence Score:</span>
+                <span className="text-blue-400 font-bold text-lg">{result.divergence_score}</span>
+              </div>
+              <div className="flex flex-col gap-1 border-b border-gray-800 pb-2">
+                <span className="text-gray-400">SHA-256 Hash:</span>
+                <span className="text-gray-300 break-all text-xs bg-black/50 p-2 rounded">{result.sha256_hash}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">Signature:</span>
+                <span className="text-purple-400 text-xs">{result.signature}</span>
+              </div>
+            </div>
           </div>
         )}
       </div>

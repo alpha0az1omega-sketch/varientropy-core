@@ -10,3 +10,6 @@ We believe in "Zero-Trust Science". To ensure full auditability, our code is str
 
 2. **The Enterprise Layer (Private)**: 
    - `src/enterprise/` contains the Ed25519 cryptographic license gate. This is **not** part of the science; it is purely the business logic to prevent unauthorized commercial use. The core math does not depend on it.
+
+## 🧬 The Next Step: Ξ-Meta
+Beyond text divergence, Varientropy explores **Structural Plasticity** via the `Ξ-Meta` protocol. Read the manifesto in `XI_META.md`.

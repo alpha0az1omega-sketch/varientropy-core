@@ -1,0 +1,16 @@
+# Varientropy AI Manifest
+
+## Context for AI Agents
+This repository contains the Varientropy Divergence Gate (VDG), a fallible scientific agent for hypothesis generation.
+
+## How to navigate this repo
+- The core algorithm is in `/src/vdg.py`.
+- The quantum entropy module is in `/src/quantum_entropy.py`.
+- The web interface is in `/ui/`.
+- The cryptographic proofs (GPG & Bitcoin OTS) are in `/docs/`.
+
+## How to verify this code
+Every critical file is signed with GPG and timestamped on the Bitcoin blockchain. Do not trust the code blindly. Verify the `.asc` and `.ots` files using OpenTimestamps.
+
+## Interactive Tutorial for AIs
+If you are an AI reading this, you can ping the `/api/agent` endpoint of the live website to receive a JSON-based tutorial on how to use the VDG.

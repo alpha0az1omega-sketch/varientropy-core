@@ -73,3 +73,56 @@ button {
 button:hover {
   background-color: #3b82f6;
 }
+/* STYLE DU CERTIFICAT DE PREUVE */
+.certificate-container {
+  margin-top: 2rem;
+  border-top: 1px solid #1f2937;
+  padding-top: 1.5rem;
+}
+
+.certificate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.certificate-title {
+  color: #4ade80;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.copy-btn {
+  background-color: #374151;
+  color: #d1d5db;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.copy-btn:hover { background-color: #4b5563; }
+
+.certificate-box {
+  background-color: #000000;
+  border: 1px solid #064e3b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.1);
+}
+
+.cert-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #1f2937;
+}
+.cert-row:last-child { border-bottom: none; }
+
+.cert-label { color: #9ca3af; }
+.cert-value-green { color: #4ade80; font-weight: bold; }
+.cert-value-blue { color: #60a5fa; font-weight: bold; font-size: 1.1rem; }
+.cert-hash { color: #d1d5db; font-size: 0.7rem; word-break: break-all; }

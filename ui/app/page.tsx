@@ -7,6 +7,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Animation de fond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -70,10 +71,12 @@ export default function Home() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', backgroundColor: '#0a0a0a', color: '#ffffff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+    <main style={{ minHeight: '100vh', backgroundColor: '#0a0a0a', color: '#ffffff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'sans-serif' }}>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />
 
       <div style={{ zIndex: 10, width: '100%', maxWidth: '650px', backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(16px)', border: '1px solid #333', borderRadius: '24px', padding: '40px', boxShadow: '0 0 40px rgba(0,0,0,0.8)' }}>
+        
+        {/* Titre */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0, background: 'linear-gradient(to right, #60a5fa, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             VARIENTROPY
@@ -81,6 +84,7 @@ export default function Home() {
           <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.1rem' }}>H(X) - I(X;Y) + Var(f)</p>
         </div>
 
+        {/* Formulaire */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <label style={{ fontSize: '0.9rem', color: '#d1d5db', fontWeight: 500 }}>
             Enter your research query:
@@ -102,13 +106,14 @@ export default function Home() {
           </button>
         </div>
 
+        {/* Certificat de Preuve (Le Miracle) */}
         {result && (
           <div style={{ marginTop: '32px', borderTop: '1px solid #333', paddingTop: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#4ade80', margin: 0 }}>V-ML Attestation</h2>
               <button 
                 onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
-                style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                style={{ backgroundColor: '#374151', color: '#d1d5db', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'monospace' }}
               >
                 Copy JSON for AI
               </button>

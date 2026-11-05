@@ -1,0 +1,25 @@
+services:
+  bitcoind:
+    image: bitcoin/bitcoin:latest
+    command: -prune=10000 -rpcuser=varientropy -rpcpassword=changeme -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0
+    volumes: ["./bitcoin-data:/home/bitcoin/.bitcoin"]
+    ports: ["8332:8332", "8333:8333"]
+    restart: unless-stopped
+  helixworld:
+    image: noizai/helixworld:preview
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]
+    ports: ["7860:7860"]
+    restart: unless-stopped
+  joyai-vl:
+    image: jdopensource/joyai-vl-interaction:latest
+    ports: ["8000:8000"]
+    restart: unless-stopped
+  openvoiceui:
+    image: mcerqua/openvoiceui:latest
+    env_file: [".env"]
+    ports: ["5000:5000"]
+    depends_on: [joyai-vl, bitcoind]
+    restart: unless-stopped

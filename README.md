@@ -1,5 +1,7 @@
 # Varientropy-Core
 
+**Live Demo:** [https://varientropy-core.vercel.app](https://varientropy-core.vercel.app)
+
 **Varientropy** is an open, fallible scientific framework designed to measure the semantic divergence of AI-generated hypotheses. It operates on the principle of "Zero-Trust Science": no claim is taken for granted, and every result is cryptographically verifiable.
 
 ## 🧮 The Mathematical Framework

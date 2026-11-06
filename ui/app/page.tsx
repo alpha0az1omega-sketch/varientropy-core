@@ -5,6 +5,7 @@ export default function Home() {
   const [hypothesis, setHypothesis] = useState("");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('standard'); // L'état des onglets
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function Home() {
       setResult(data);
     } catch (error) {
       console.error(error);
-      setResult({ error: "Failed to connect to the AI model. Please try again." });
+      setResult({ error: "Failed to connect to the AI model. Please wait a few seconds and try again. (Cold Start)" });
     } finally {
       setLoading(false);
     }
@@ -103,10 +104,34 @@ export default function Home() {
           <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.2rem' }}>H(X) - I(X;Y) + Var(f)</p>
         </div>
 
+        {/* ONGLETS */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+          <button onClick={() => setActiveTab('standard')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'standard' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>Standard</button>
+          <button onClick={() => setActiveTab('api')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'api' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>API</button>
+          <button onClick={() => setActiveTab('scientific')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'scientific' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>Scientifique</button>
+        </div>
+
+        {/* CONTENU DES ONGLETS */}
+        {activeTab === 'standard' && (
+          <p style={{ textAlign: 'center', color: '#d1d5db', fontSize: '0.9rem', margin: 0 }}>
+            Entrez une hypothèse pour mesurer sa divergence sémantique par rapport au corpus.
+          </p>
+        )}
+        {activeTab === 'api' && (
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.8)', padding: '15px', borderRadius: '8px', border: '1px solid #374151' }}>
+            <h3 style={{ color: '#60a5fa', marginTop: 0, fontSize: '1rem' }}>API Publique pour Chercheurs</h3>
+            <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>Utilisez notre API REST pour intégrer Varientropy dans vos scripts Python.</p>
+            <code style={{ color: '#4ade80', backgroundColor: '#1f2937', padding: '6px', borderRadius: '4px', display: 'block', wordBreak: 'break-all', fontSize: '0.75rem' }}>POST https://varientropy-core.vercel.app/api/vdg</code>
+          </div>
+        )}
+        {activeTab === 'scientific' && (
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.8)', padding: '15px', borderRadius: '8px', border: '1px solid #374151' }}>
+            <h3 style={{ color: '#a855f7', marginTop: 0, fontSize: '1rem' }}>Mode Scientifique</h3>
+            <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>Accédez aux métriques brutes (Entropie de Shannon, Divergence KL, Variance sémantique) pour vos publications.</p>
+          </div>
+        )}
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <label style={{ fontSize: '0.95rem', color: '#d1d5db', fontWeight: 500, textAlign: 'center' }}>
-            Enter your research query:
-          </label>
           <textarea 
             style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', outline: 'none', resize: 'none', boxShadow: '0 0 20px rgba(0,0,0,0.5)' }}
             rows={3}
@@ -124,7 +149,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* LE CERTIFICAT DE PREUVE COMPLET */}
         {result && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
@@ -169,7 +193,7 @@ export default function Home() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
                   <span style={{ color: '#9ca3af' }}>Status:</span>
-                  <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Mathematically Validated</span>
+                  <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Cryptographically Attested</span>
                 </div>
               </div>
             )}

@@ -5,7 +5,7 @@ export default function Home() {
   const [hypothesis, setHypothesis] = useState("");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('standard'); // L'état des onglets
+  const [activeTab, setActiveTab] = useState('standard');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function Home() {
       setResult(data);
     } catch (error) {
       console.error(error);
-      setResult({ error: "Failed to connect to the AI model. Please wait a few seconds and try again. (Cold Start)" });
+      setResult({ error: "Failed to connect to the AI model. If this is the first test, wait 30 seconds for the AI to load, then try again." });
     } finally {
       setLoading(false);
     }
@@ -104,14 +104,12 @@ export default function Home() {
           <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.2rem' }}>H(X) - I(X;Y) + Var(f)</p>
         </div>
 
-        {/* ONGLETS */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
           <button onClick={() => setActiveTab('standard')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'standard' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>Standard</button>
           <button onClick={() => setActiveTab('api')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'api' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>API</button>
           <button onClick={() => setActiveTab('scientific')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: activeTab === 'scientific' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s' }}>Scientifique</button>
         </div>
 
-        {/* CONTENU DES ONGLETS */}
         {activeTab === 'standard' && (
           <p style={{ textAlign: 'center', color: '#d1d5db', fontSize: '0.9rem', margin: 0 }}>
             Entrez une hypothèse pour mesurer sa divergence sémantique par rapport au corpus.

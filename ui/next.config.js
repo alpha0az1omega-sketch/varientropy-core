@@ -8,5 +8,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@xenova/transformers'],
+  },
 };
 module.exports = nextConfig;

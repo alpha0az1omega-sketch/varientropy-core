@@ -1,3 +1,4 @@
+export const maxDuration = 60; // Autorise 60 secondes d'exécution pour le chargement de l'IA
 import { NextResponse } from 'next/server';
 import { pipeline, env } from '@huggingface/transformers';
 

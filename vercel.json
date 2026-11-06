@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "ui/app/api/vdg/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}

@@ -6,7 +6,6 @@ env.allowLocalModels = false;
 env.backends.onnx.wasm.numThreads = 1; 
 env.backends.setPriority(['wasm', 'cpu']); 
 
-// --- CONFIGURATION SYSTÈME ---
 const KNOWN_CORPUS = [
   "Thermodynamics and the laws of entropy in closed systems.",
   "Mutual information and deep learning neural networks.",
@@ -131,9 +130,9 @@ export async function POST(request: Request) {
       "cryptographic_proof": {
         "hash": hashHex,
         "timestamp_utc": new Date().toISOString(),
-        "note": "The SHA-256 hash depends ONLY on the query. The timestamp proves existence at time T."
+        "note": "The SHA-256 hash depends ONLY on the query."
       },
-      "verification_instructions": "Submit the exact same query. The hash and the mathematical metrics will be identical. The timestamp will differ, proving the time of attestation."
+      "verification_instructions": "Submit the exact same query. The hash and metrics will be identical."
     };
 
     semanticCache.set(query, attestation);

@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
-import { pipeline } from '@xenova/transformers';
+import { pipeline, env } from '@huggingface/transformers'; // Utilisation du nouveau package
 
+// --- CORRECTION POUR VERCEL (SERVERLESS) ---
+env.allowLocalModels = false; // Empêche le chargement de fichiers C++ natifs[reference:4]
+env.backends.onnx.wasm.numThreads = 1; // Limite la mémoire pour les serveurs Vercel[reference:5]
+env.backends.setPriority(['wasm', 'cpu']); // Force l'utilisation de WebAssembly[reference:6]
+
+// ... le reste de ton code (KNOWN_CORPUS, fonctions softmax, etc.) reste inchangé ...
 // --- CONFIGURATION SYSTÈME ---
 const KNOWN_CORPUS = [
   "Thermodynamics and the laws of entropy in closed systems.",

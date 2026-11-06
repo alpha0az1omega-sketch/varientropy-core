@@ -22,5 +22,8 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "typescript": "^7.0.2"
+  },
+  "overrides": {
+    "onnxruntime-node": "npm:empty-npm-package@1.0.0"
   }
 }

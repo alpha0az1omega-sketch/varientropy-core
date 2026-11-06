@@ -83,6 +83,7 @@ export default function Home() {
       setResult(data);
     } catch (error) {
       console.error(error);
+      setResult({ error: "Failed to connect to the AI model. Please try again." });
     } finally {
       setLoading(false);
     }
@@ -119,36 +120,59 @@ export default function Home() {
             disabled={loading}
             style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 30px rgba(37,99,235,0.4)', transition: 'all 0.2s' }}
           >
-            {loading ? "Calculating Qubit Alignment..." : "Run VDG Algorithm"}
+            {loading ? "Calculating Semantic Divergence (AI Model Loading)..." : "Run VDG Algorithm"}
           </button>
         </div>
 
+        {/* LE CERTIFICAT DE PREUVE COMPLET */}
         {result && (
           <div style={{ marginTop: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#4ade80', margin: 0 }}>V-ML Attestation</h2>
-              <button 
-                onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
-                style={{ backgroundColor: 'rgba(55, 65, 81, 0.8)', color: '#d1d5db', border: '1px solid #4b5563', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'monospace' }}
-              >
-                Copy JSON
-              </button>
+              {!result.error && (
+                <button 
+                  onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))}
+                  style={{ backgroundColor: 'rgba(55, 65, 81, 0.8)', color: '#d1d5db', border: '1px solid #4b5563', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'monospace' }}
+                >
+                  Copy JSON
+                </button>
+              )}
             </div>
             
-            <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.85rem', boxShadow: '0 0 20px rgba(74, 222, 128, 0.15)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid #1f2937' }}>
-                <span style={{ color: '#9ca3af' }}>Divergence:</span>
-                <span style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: '1.1rem' }}>{result.metrics?.divergence_score || result.divergence_score}</span>
+            {result.error ? (
+              <div style={{ color: '#ef4444', backgroundColor: 'rgba(153, 27, 27, 0.2)', padding: '15px', borderRadius: '8px', border: '1px solid #7f1d1d', fontSize: '0.9rem' }}>
+                {result.error}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px 0', borderBottom: '1px solid #1f2937' }}>
-                <span style={{ color: '#9ca3af' }}>SHA-256 Proof:</span>
-                <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.7rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash || result.sha256_hash}</span>
+            ) : (
+              <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.85rem', boxShadow: '0 0 20px rgba(74, 222, 128, 0.15)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid #1f2937' }}>
+                  <span style={{ color: '#9ca3af' }}>Divergence Score:</span>
+                  <span style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '1.2rem' }}>{result.metrics?.divergence_score}</span>
+                </div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.75rem' }}>
+                  <span style={{ color: '#9ca3af' }}>H(X) Entropy:</span>
+                  <span style={{ color: '#d1d5db' }}>{result.metrics?.entropy_H}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.75rem' }}>
+                  <span style={{ color: '#9ca3af' }}>I(X;Y) Mutual Info:</span>
+                  <span style={{ color: '#d1d5db' }}>{result.metrics?.mutual_info_I}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.75rem' }}>
+                  <span style={{ color: '#9ca3af' }}>Var(f) Variance:</span>
+                  <span style={{ color: '#d1d5db' }}>{result.metrics?.variance_F}</span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px 0', borderBottom: '1px solid #1f2937' }}>
+                  <span style={{ color: '#9ca3af' }}>SHA-256 Proof:</span>
+                  <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.7rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
+                  <span style={{ color: '#9ca3af' }}>Status:</span>
+                  <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Mathematically Validated</span>
+                </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
-                <span style={{ color: '#9ca3af' }}>Status:</span>
-                <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Mathematically Validated</span>
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>

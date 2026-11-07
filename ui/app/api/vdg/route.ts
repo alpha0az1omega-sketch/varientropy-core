@@ -1,12 +1,4 @@
-export const maxDuration = 60; // Autorise 60 secondes d'exécution pour le chargement de l'IA
 import { NextResponse } from 'next/server';
-import { pipeline, env } from '@huggingface/transformers';
-
-// --- CORRECTION POUR VERCEL (SERVERLESS) ---
-// Force l'utilisation de WebAssembly pour éviter l'erreur "libonnxruntime.so.1"
-env.allowLocalModels = false;
-env.backends.onnx.wasm.numThreads = 1;
-env.backends.setPriority(['wasm', 'cpu']); // Priorité au backend WASM
 
 const KNOWN_CORPUS = [
   "Thermodynamics and the laws of entropy in closed systems.",
@@ -16,29 +8,16 @@ const KNOWN_CORPUS = [
   "Genetic algorithms and evolutionary computation."
 ];
 
-let extractor: any = null;
-const semanticCache = new Map();
-const rateLimitMap = new Map();
-
-// --- MOTEUR MATHÉMATIQUE (FALLBACK DÉTERMINISTE SANS IA) ---
-async function getMathEmbedding(text: string, dim = 64): Promise<number[]> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-  const hashBuffer = await crypto.subtle.digest('SHA-512', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.slice(0, dim).map(b => b / 255.0);
-}
-
-// --- MOTEUR SÉMANTIQUE (IA OPTIONNELLE) ---
-async function getAIEmbedding(text: string): Promise<number[]> {
-  if (!extractor) {
-    extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+// Fonction mathématique déterministe (utilisée en mode "math")
+function getMathEmbedding(text: string, dim = 64): number[] {
+  const hash = require('crypto').createHash('sha512').update(text).digest();
+  const arr = [];
+  for (let i = 0; i < dim; i++) {
+    arr.push(hash[i] / 255.0);
   }
-  const output = await extractor(text, { pooling: 'mean', normalize: true });
-  return Array.from(output.data);
+  return arr;
 }
 
-// --- FONCTIONS MATHÉMATIQUES COMMUNES ---
 function softmax(arr: number[]): number[] {
   const max = Math.max(...arr);
   const exps = arr.map(x => Math.exp(x - max));
@@ -70,33 +49,15 @@ function calculateVariance(similarities: number[]): number {
 }
 
 export async function POST(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') || 'anonymous';
-  const now = Date.now();
-  const windowStart = now - 60000;
-  
-  const requests = rateLimitMap.get(ip) || [];
-  const recentRequests = requests.filter((time: number) => time > windowStart);
-  if (recentRequests.length >= 10) {
-    return NextResponse.json({ error: "Rate limit exceeded. Please wait a minute." }, { status: 429 });
-  }
-  rateLimitMap.set(ip, [...recentRequests, now]);
-
   try {
     const body = await request.json();
     const query = body.query;
-    const mode = body.mode || 'math'; // 'math' par défaut, 'ai' en option
+    const mode = body.mode || 'math';
 
     if (!query) return NextResponse.json({ error: "Query required" }, { status: 400 });
 
-    const cacheKey = `${mode}:${query}`;
-    if (semanticCache.has(cacheKey)) {
-      return NextResponse.json(semanticCache.get(cacheKey));
-    }
-
-    // Choix du moteur d'embedding
-    const embeddingFunc = mode === 'ai' ? getAIEmbedding : getMathEmbedding;
-    
-    const hypVec = await embeddingFunc(query);
+    // Pour l'instant, on utilise le moteur mathématique pour garantir que ça marche
+    const hypVec = getMathEmbedding(query);
     const hypProbs = softmax(hypVec);
     const entropy_H = calculateEntropy(hypProbs);
 
@@ -104,7 +65,7 @@ export async function POST(request: Request) {
     let similarities = [];
 
     for (const knownText of KNOWN_CORPUS) {
-      const knownVec = await embeddingFunc(knownText);
+      const knownVec = getMathEmbedding(knownText);
       const knownProbs = softmax(knownVec);
       totalKL += calculateKL(hypProbs, knownProbs);
       
@@ -124,39 +85,26 @@ export async function POST(request: Request) {
     let divergenceScore = entropy_H - mutual_info_I + (variance_F * 0.5);
     divergenceScore = Math.max(0, Math.min(1, divergenceScore));
 
-    const encoder = new TextEncoder();
-    const data = encoder.encode(query);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    // Génération du Hash
+    const crypto = require('crypto');
+    const hashHex = crypto.createHash('sha256').update(query).digest('hex');
 
-    const attestation = {
-      "@context": "https://schema.org",
-      "@type": "DigitalDocument",
-      "name": "Varientropy Attestation",
-      "engine": mode === 'ai' ? 'Semantic (AI)' : 'Mathematical (Deterministic)',
-      "formula": "H(X) - I(X;Y) + Var(f)",
-      "hypothesis": query,
-      "metrics": {
-        "entropy_H": entropy_H.toFixed(4),
-        "mutual_info_I": mutual_info_I.toFixed(4),
-        "variance_F": variance_F.toFixed(4),
-        "divergence_score": divergenceScore.toFixed(4),
-        "is_novel": divergenceScore > 0.35
+    return NextResponse.json({
+      engine: mode === 'ai' ? 'Scientifique (Fallback Mathématique)' : 'Mathématique (Déterministe)',
+      hypothesis: query,
+      metrics: {
+        entropy_H: entropy_H.toFixed(4),
+        mutual_info_I: mutual_info_I.toFixed(4),
+        variance_F: variance_F.toFixed(4),
+        divergence_score: divergenceScore.toFixed(4),
       },
-      "cryptographic_proof": {
-        "hash": hashHex,
-        "timestamp_utc": new Date().toISOString(),
-        "note": "The SHA-256 hash depends ONLY on the query."
-      },
-      "verification_instructions": "Submit the exact same query with the same engine. The hash and metrics will be identical."
-    };
-
-    semanticCache.set(cacheKey, attestation);
-    return NextResponse.json(attestation);
+      cryptographic_proof: {
+        hash: hashHex,
+        timestamp_utc: new Date().toISOString(),
+      }
+    });
 
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

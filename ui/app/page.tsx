@@ -6,8 +6,19 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [engine, setEngine] = useState<'math' | 'ai'>('math');
+  const [liveHash, setLiveHash] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // 🌌 Le Ticker Cryptographique Vivant
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomStr = Math.random().toString(36).substring(2, 15);
+      setLiveHash(btoa(randomStr).substring(0, 16).toUpperCase());
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 🎨 L'Animation de fond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -33,7 +44,7 @@ export default function Home() {
     let animationFrameId: number;
     const render = () => {
       const time = Date.now() / 1000;
-      const breath = Math.sin(time * 1.5) * 0.5 + 0.5; // Effet de respiration
+      const breath = Math.sin(time * 1.5) * 0.5 + 0.5;
       
       ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -44,7 +55,6 @@ export default function Home() {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         
         const currentRadius = p.baseRadius * (0.8 + breath * 0.6);
-        
         ctx.beginPath(); 
         ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2);
         const hue = 220 + (breath * 40); 
@@ -83,19 +93,33 @@ export default function Home() {
         body: JSON.stringify({ query: hypothesis, mode: engine })
       });
       const data = await response.json();
-      setResult(data);
+      setTimeout(() => setResult(data), 800); // Le petit délai pour voir le glitch
     } catch (error) {
       setResult({ error: "Erreur de connexion. Réessayez." });
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 800);
     }
   };
 
   return (
     <main style={{ minHeight: '100vh', backgroundColor: '#050505', color: '#fff', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      
+      {/* L'effet de Glitch Quantique CSS */}
+      <style>{`
+        @keyframes glitch {
+          0% { transform: translate(0) }
+          20% { transform: translate(-2px, 2px) }
+          40% { transform: translate(-2px, -2px) }
+          60% { transform: translate(2px, 2px) }
+          80% { transform: translate(2px, -2px) }
+          100% { transform: translate(0) }
+        }
+        .glitch-active { animation: glitch 0.2s infinite; }
+      `}</style>
+
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />
       
-      <div style={{ zIndex: 1, width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className={loading ? "glitch-active" : ""} style={{ zIndex: 1, width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ textAlign: 'center' }}>
           <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0, background: 'linear-gradient(to right, #60a5fa, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-2px' }}>VARIENTROPY</h1>
           <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.1rem' }}>H(X) - I(X;Y) + Var(f)</p>
@@ -115,7 +139,7 @@ export default function Home() {
             onChange={(e) => setHypothesis(e.target.value)}
           />
           <button onClick={handleGenerate} disabled={loading} style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 30px rgba(37,99,235,0.4)' }}>
-            {loading ? "Calcul..." : `Lancer l'algorithme ${engine === 'ai' ? 'Scientifique' : 'Mathématique'}`}
+            {loading ? "Décohérence Quantique en cours..." : `Lancer l'algorithme`}
           </button>
         </div>
 
@@ -144,6 +168,11 @@ export default function Home() {
             )}
           </div>
         )}
+      </div>
+
+      {/* Le Ticker Vivant */}
+      <div style={{ position: 'fixed', bottom: '10px', left: '0', width: '100%', textAlign: 'center', fontFamily: 'monospace', fontSize: '0.7rem', color: '#374151', zIndex: 0 }}>
+        LIVE QUANTUM HASH: {liveHash} • BITCOIN BLOCK: {Math.floor(Date.now() / 600000)} • ENTROPY STABLE
       </div>
     </main>
   );

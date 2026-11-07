@@ -13,42 +13,68 @@ export default function Home() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    
     const particles: any[] = [];
     for (let i = 0; i < 100; i++) {
       particles.push({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6,
-        radius: Math.random() * 2 + 1
+        vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+        baseRadius: Math.random() * 1.5 + 1
       });
     }
+    
     let animationFrameId: number;
+    
     const render = () => {
+      // Effet de respiration globale
+      const time = Date.now() / 1000;
+      const breath = Math.sin(time * 1.5) * 0.5 + 0.5; // Oscille entre 0 et 1
+      
       ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
       particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy;
+        p.x += p.vx * (1 + breath * 0.5); // Les particules accélèrent un peu
+        p.y += p.vy * (1 + breath * 0.5);
+        
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(96, 165, 250, 0.8)'; ctx.fill();
+        
+        // La taille des particules "respire"
+        const currentRadius = p.baseRadius * (0.8 + breath * 0.6);
+        
+        ctx.beginPath(); 
+        ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2);
+        // La couleur oscille entre bleu et violet
+        const hue = 220 + (breath * 40); 
+        ctx.fillStyle = `hsla(${hue}, 80%, 70%, 0.8)`; 
+        ctx.fill();
+        
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
           if (dist < 150) {
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(168, 85, 247, ${1 - dist / 150})`; ctx.stroke();
+            ctx.beginPath(); 
+            ctx.moveTo(p.x, p.y); 
+            ctx.lineTo(p2.x, p2.y);
+            // L'opacité des lignes change avec la respiration
+            const opacity = (1 - dist / 150) * (0.4 + breath * 0.6);
+            ctx.strokeStyle = `rgba(168, 85, 247, ${opacity})`; 
+            ctx.stroke();
           }
         }
       });
       animationFrameId = requestAnimationFrame(render);
     };
     render();
+    
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
@@ -78,13 +104,13 @@ export default function Home() {
   return (
     <main style={{ minHeight: '100vh', backgroundColor: '#050505', color: '#fff', position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />
+      
       <div style={{ zIndex: 1, width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ textAlign: 'center' }}>
           <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0, background: 'linear-gradient(to right, #60a5fa, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-2px' }}>VARIENTROPY</h1>
           <p style={{ marginTop: '10px', color: '#9ca3af', fontFamily: 'monospace', fontSize: '1.1rem' }}>H(X) - I(X;Y) + Var(f)</p>
         </div>
 
-        {/* SÉLECTEUR DE MOTEUR */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
           <button onClick={() => setEngine('math')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'math' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.85rem' }}>Mathématique (Déterministe)</button>
           <button onClick={() => setEngine('ai')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'ai' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.85rem' }}>Scientifique (IA)</button>

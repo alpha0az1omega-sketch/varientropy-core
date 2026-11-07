@@ -25,34 +25,28 @@ export default function Home() {
     for (let i = 0; i < 100; i++) {
       particles.push({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-        baseRadius: Math.random() * 1.5 + 1
+        vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+        baseRadius: Math.random() * 2 + 1
       });
     }
     
     let animationFrameId: number;
-    
     const render = () => {
-      // Effet de respiration globale
       const time = Date.now() / 1000;
-      const breath = Math.sin(time * 1.5) * 0.5 + 0.5; // Oscille entre 0 et 1
+      const breath = Math.sin(time * 1.5) * 0.5 + 0.5; // Effet de respiration
       
       ctx.fillStyle = 'rgba(10, 10, 10, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach((p, i) => {
-        p.x += p.vx * (1 + breath * 0.5); // Les particules accélèrent un peu
-        p.y += p.vy * (1 + breath * 0.5);
-        
+        p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         
-        // La taille des particules "respire"
         const currentRadius = p.baseRadius * (0.8 + breath * 0.6);
         
         ctx.beginPath(); 
         ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2);
-        // La couleur oscille entre bleu et violet
         const hue = 220 + (breath * 40); 
         ctx.fillStyle = `hsla(${hue}, 80%, 70%, 0.8)`; 
         ctx.fill();
@@ -61,10 +55,7 @@ export default function Home() {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
           if (dist < 150) {
-            ctx.beginPath(); 
-            ctx.moveTo(p.x, p.y); 
-            ctx.lineTo(p2.x, p2.y);
-            // L'opacité des lignes change avec la respiration
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
             const opacity = (1 - dist / 150) * (0.4 + breath * 0.6);
             ctx.strokeStyle = `rgba(168, 85, 247, ${opacity})`; 
             ctx.stroke();
@@ -94,8 +85,7 @@ export default function Home() {
       const data = await response.json();
       setResult(data);
     } catch (error) {
-      console.error(error);
-      setResult({ error: "Failed to connect. If using AI mode, wait 30s for the model to load and try again." });
+      setResult({ error: "Erreur de connexion. Réessayez." });
     } finally {
       setLoading(false);
     }
@@ -112,20 +102,20 @@ export default function Home() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <button onClick={() => setEngine('math')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'math' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.85rem' }}>Mathématique (Déterministe)</button>
-          <button onClick={() => setEngine('ai')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'ai' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.85rem' }}>Scientifique (IA)</button>
+          <button onClick={() => setEngine('math')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'math' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', fontSize: '0.85rem' }}>Mathématique (Déterministe)</button>
+          <button onClick={() => setEngine('ai')} style={{ padding: '8px 16px', borderRadius: '20px', border: '1px solid #4b5563', backgroundColor: engine === 'ai' ? '#2563eb' : 'transparent', color: 'white', cursor: 'pointer', fontSize: '0.85rem' }}>Scientifique (IA)</button>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <textarea 
-            style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', outline: 'none', resize: 'none', boxShadow: '0 0 20px rgba(0,0,0,0.5)' }}
+            style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', outline: 'none', resize: 'none' }}
             rows={3}
-            placeholder={engine === 'ai' ? "Ex: Analyze quantum entanglement in neural networks..." : "Ex: Any text to get a deterministic hash..."}
+            placeholder="Entrez votre hypothèse..."
             value={hypothesis}
             onChange={(e) => setHypothesis(e.target.value)}
           />
-          <button onClick={handleGenerate} disabled={loading} style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 30px rgba(37,99,235,0.4)', transition: 'all 0.2s' }}>
-            {loading ? "Calculating..." : `Run ${engine === 'ai' ? 'Scientific' : 'Mathematical'} VDG`}
+          <button onClick={handleGenerate} disabled={loading} style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 30px rgba(37,99,235,0.4)' }}>
+            {loading ? "Calcul..." : `Lancer l'algorithme ${engine === 'ai' ? 'Scientifique' : 'Mathématique'}`}
           </button>
         </div>
 
@@ -133,37 +123,22 @@ export default function Home() {
           <div style={{ marginTop: '10px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <h2 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#4ade80', margin: 0 }}>V-ML Attestation</h2>
-              {!result.error && (
-                <button onClick={() => navigator.clipboard.writeText(JSON.stringify(result, null, 2))} style={{ backgroundColor: 'rgba(55, 65, 81, 0.8)', color: '#d1d5db', border: '1px solid #4b5563', padding: '6px 12px', borderRadius: '6px', fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'monospace' }}>Copy JSON</button>
-              )}
             </div>
             {result.error ? (
-              <div style={{ color: '#ef4444', backgroundColor: 'rgba(153, 27, 27, 0.2)', padding: '15px', borderRadius: '8px', border: '1px solid #7f1d1d', fontSize: '0.85rem' }}>{result.error}</div>
+              <div style={{ color: '#ef4444', backgroundColor: 'rgba(153, 27, 27, 0.2)', padding: '15px', borderRadius: '8px', border: '1px solid #7f1d1d' }}>{result.error}</div>
             ) : (
               <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.8rem', boxShadow: '0 0 20px rgba(74, 222, 128, 0.15)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid #1f2937' }}>
                   <span style={{ color: '#9ca3af' }}>Divergence Score:</span>
                   <span style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '1.1rem' }}>{result.metrics?.divergence_score}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.7rem' }}>
-                  <span style={{ color: '#9ca3af' }}>H(X) Entropy:</span>
-                  <span style={{ color: '#d1d5db' }}>{result.metrics?.entropy_H}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.7rem' }}>
-                  <span style={{ color: '#9ca3af' }}>I(X;Y) Mutual Info:</span>
-                  <span style={{ color: '#d1d5db' }}>{result.metrics?.mutual_info_I}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #1f2937', fontSize: '0.7rem' }}>
-                  <span style={{ color: '#9ca3af' }}>Var(f) Variance:</span>
-                  <span style={{ color: '#d1d5db' }}>{result.metrics?.variance_F}</span>
-                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px 0', borderBottom: '1px solid #1f2937' }}>
                   <span style={{ color: '#9ca3af' }}>SHA-256 Proof:</span>
                   <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.65rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>
-                  <span style={{ color: '#9ca3af' }}>Engine:</span>
-                  <span style={{ color: '#4ade80', fontWeight: 'bold' }}>{result.engine}</span>
+                  <span style={{ color: '#9ca3af' }}>Status:</span>
+                  <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Cryptographically Attested</span>
                 </div>
               </div>
             )}

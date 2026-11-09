@@ -49,9 +49,9 @@ export async function POST(request: Request) {
     const mode = body.mode || 'math';
     const apiKey = body.apiKey;
 
-    if (!query) return NextResponse.json({ error: "Query required" }, { status: 400 });
+    if (!query) return NextResponse.json({ error: "Query is required" }, { status: 400 });
 
-    // --- CALCUL MATHÉMATIQUE (Toujours exécuté) ---
+    // --- MATHEMATICAL CALCULATION (Always executed) ---
     const hypVec = getMathEmbedding(query);
     const hypProbs = softmax(hypVec);
     const entropy_H = calculateEntropy(hypProbs);
@@ -79,11 +79,11 @@ export async function POST(request: Request) {
     let score = entropy_H - mutual_info_I + (variance_F * 0.5);
     score = Math.max(0, Math.min(1, score));
 
-    // --- GÉNÉRATION DU HASH (Correction UTF-8) ---
+    // --- CRYPTOGRAPHIC PROOF GENERATION (UTF-8 Fixed) ---
     const crypto = require('crypto');
     const hashHex = crypto.createHash('sha256').update(query, 'utf8').digest('hex');
 
-    // --- ANALYSE IA (Optionnelle BYOK) ---
+    // --- AI ANALYSIS (Optional BYOK) ---
     let aiAnalysis = null;
     if (mode === 'ai' && apiKey) {
       try {
@@ -92,13 +92,13 @@ export async function POST(request: Request) {
           headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: "gpt-4o-mini",
-            messages: [{ role: "user", content: `Analyse cette hypothèse en 3 phrases : ${query}` }]
+            messages: [{ role: "user", content: `Analyze this scientific hypothesis in 3 sentences: ${query}` }]
           })
         });
         const aiData = await aiResponse.json();
-        aiAnalysis = aiData.choices?.[0]?.message?.content || "Erreur d'analyse IA.";
+        aiAnalysis = aiData.choices?.[0]?.message?.content || "AI analysis error.";
       } catch (e) {
-        aiAnalysis = "Impossible de contacter l'API IA.";
+        aiAnalysis = "Failed to connect to the AI API.";
       }
     }
 

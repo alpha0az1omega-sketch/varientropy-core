@@ -85,7 +85,7 @@ export default function Home() {
       const data = await response.json();
       setResult(data);
     } catch (error) {
-      setResult({ error: "Connection failed." });
+      setResult({ error: "Connection failed. Please try again." });
     } finally {
       setLoading(false);
     }
@@ -149,7 +149,7 @@ export default function Home() {
           {engine === 'ai' && (
             <input 
               type="password"
-              placeholder="Optionnel : Entrez votre clé API (OpenAI) pour l'analyse IA"
+              placeholder="Optional: Enter your API Key (OpenAI) for AI analysis"
               style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '12px', fontFamily: 'monospace', outline: 'none' }}
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}

@@ -3,12 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
   const [hypothesis, setHypothesis] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [engine, setEngine] = useState<'math' | 'ai'>('math');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // 🎨 L'Animation de fond
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -80,7 +80,7 @@ export default function Home() {
       const response = await fetch('/api/vdg', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: hypothesis, mode: engine })
+        body: JSON.stringify({ query: hypothesis, mode: engine, apiKey: apiKey })
       });
       const data = await response.json();
       setResult(data);
@@ -91,7 +91,6 @@ export default function Home() {
     }
   };
 
-  // 📥 Fonction pour télécharger le JSON
   const downloadJSON = () => {
     if (!result) return;
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(result, null, 2));
@@ -103,10 +102,8 @@ export default function Home() {
     downloadAnchorNode.remove();
   };
 
-  // 🎨 Générateur de Sigil Visuel (SVG basé sur le Hash)
   const generateSigil = (hash: string) => {
     if (!hash) return null;
-    // On extrait des valeurs du hash pour créer des formes uniques
     const c1 = parseInt(hash.substring(0, 6), 16) % 360;
     const c2 = parseInt(hash.substring(6, 12), 16) % 360;
     
@@ -149,6 +146,15 @@ export default function Home() {
             value={hypothesis}
             onChange={(e) => setHypothesis(e.target.value)}
           />
+          {engine === 'ai' && (
+            <input 
+              type="password"
+              placeholder="Optionnel : Entrez votre clé API (OpenAI) pour l'analyse IA"
+              style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.8)', color: '#fff', border: '1px solid #4b5563', borderRadius: '12px', padding: '12px', fontFamily: 'monospace', outline: 'none' }}
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+            />
+          )}
           <button onClick={handleGenerate} disabled={loading} style={{ width: '100%', padding: '16px', backgroundColor: loading ? '#1e3a8a' : '#2563eb', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 0 30px rgba(37,99,235,0.4)' }}>
             {loading ? "Generating Proof..." : `Run Algorithm`}
           </button>
@@ -164,8 +170,6 @@ export default function Home() {
             </div>
             
             <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.8rem', boxShadow: '0 0 20px rgba(74, 222, 128, 0.15)' }}>
-              
-              {/* Le Sigil Visuel */}
               <div style={{ marginBottom: '15px' }}>
                 {generateSigil(result.cryptographic_proof?.hash)}
               </div>
@@ -184,6 +188,13 @@ export default function Home() {
                 <span style={{ color: '#9ca3af' }}>Status:</span>
                 <span style={{ color: '#4ade80', fontWeight: 'bold' }}>Cryptographically Attested</span>
               </div>
+
+              {result.ai_analysis && (
+                <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #1f2937' }}>
+                  <span style={{ color: '#a855f7', fontWeight: 'bold' }}>AI Analysis:</span>
+                  <p style={{ color: '#d1d5db', marginTop: '5px', fontSize: '0.75rem', lineHeight: '1.4' }}>{result.ai_analysis}</p>
+                </div>
+              )}
             </div>
           </div>
         )}

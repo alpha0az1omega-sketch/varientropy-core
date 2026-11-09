@@ -1,0 +1,1 @@
+# Varientropy Strategy Folder

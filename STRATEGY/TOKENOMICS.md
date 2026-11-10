@@ -1,17 +1,19 @@
-# Varientropy Tokenomics: The Proof of Novelty Coin (V4.0)
+# Varientropy Tokenomics: The Proof of Novelty Coin ($VNTR)
 
 ## 1. Concept
-The Varientropy Token ($NOVL) is not a speculative memecoin. It is an **Intellectual Asset Token**. It represents the mathematical rarity of a novel hypothesis.
+The Varientropy Token ($VNTR) is not a speculative memecoin. It is an **Intellectual Asset Token**. It represents the mathematical rarity of a novel hypothesis. (Note: The symbol was changed from $NOVL to $VNTR to avoid conflict with an existing Solana token).
 
 ## 2. The Mechanism: Proof of Novelty (PoN)
-Instead of burning energy (Proof of Work) or staking capital (Proof of Stake), users earn $NOVL by submitting hypotheses to the Varientropy Divergence Gate.
+Users earn $VNTR by submitting hypotheses to the Varientropy Divergence Gate.
 
-- **The Rule**: If a user submits a hypothesis and the API returns a `divergence_score` > 0.80, they mint a fraction of $NOVL.
-- **The Rarity**: If the score is < 0.50, the hypothesis is rejected (plagiarism), and no token is minted.
+- **The Rule**: If the API returns a `divergence_score` > 0.80, they mint 1 $VNTR.
+- **The Rarity**: If the score is < 0.50, the hypothesis is rejected (plagiarism).
 
-## 3. Why it has value
-In an AI-dominated world, "Novelty" will become the most scarce resource. $NOVL is the only currency backed by mathematically proven intellectual creation.
+## 3. Addressing the Audit (Centralized Oracle Risk)
+The audit correctly noted that V1.0 is a centralized oracle. To mitigate this:
+- **Proof of Computation**: The server hashes the entire payload, not just the input.
+- **V2.0 Decentralization**: The server will sign the result with an ECDSA private key. The smart contract will verify this signature before minting. If the server is compromised, the contract will reject invalid signatures.
 
-## 4. Deployment Strategy (Future)
-- **Network**: Layer 2 (Base or Polygon) to ensure 0 gas fees for researchers.
-- **Smart Contract**: A Solidity contract that verifies the Varientropy SHA-256 hash before minting.
+## 4. Deployment Strategy
+- **Network**: Layer 2 (Base Sepolia for testing, Base Mainnet for launch).
+- **Smart Contract**: `contracts/VarientropyToken.sol`

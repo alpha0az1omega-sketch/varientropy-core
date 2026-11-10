@@ -1,0 +1,34 @@
+{
+  "known_corpus": [
+    "Newton's second law states F = ma.",
+    "The Shannon entropy of a discrete distribution is H(X) = -Σ p(x) log p(x).",
+    "DNA has a double helix structure.",
+    "General relativity describes gravity as spacetime curvature.",
+    "The Central Limit Theorem states that sums of independent random variables converge to a normal distribution."
+  ],
+  "true_novelty": [
+    "A quantum error-correcting code with a threshold of 1e-3 using only 2D nearest-neighbor connectivity.",
+    "A proof that P != NP under the assumption that one-way functions exist.",
+    "An embedding-based novelty metric invariant to paraphrase and proportional to semantic distance from a reference corpus.",
+    "A decentralized oracle that verifies off-chain computation using Ed25519 signatures and no trusted hardware.",
+    "A hash function whose preimage hash is also the Merkle root of a Bitcoin block.",
+    "A learning algorithm with regret bounded by O(√T) without knowing the horizon T.",
+    "A zero-knowledge proof of matrix multiplication with prover complexity O(n^2).",
+    "A data structure with O(1) worst-case lookup and O(log n) worst-case insertion.",
+    "A cryptographic protocol for private set intersection with communication O(n).",
+    "A theorem establishing a polynomial-time separation between BQP and PH."
+  ],
+  "false_novelty": [
+    "A slightly faster variant of the existing FFT algorithm.",
+    "A restart of Newton's second law with different notation.",
+    "A paraphrase of the Central Limit Theorem with examples.",
+    "An implementation of gradient descent with momentum, already well known.",
+    "A restatement of the No Free Lunch theorem.",
+    "A clone of BERT with a different name.",
+    "A blockchain that is a fork of Bitcoin with changed block time.",
+    "A REST API wrapper around an existing embedding model.",
+    "A sentiment classifier trained on IMDB with 95% accuracy.",
+    "A chatbot that summarizes papers using GPT-4 with a new prompt."
+  ],
+  "notes": "This is a starter corpus of 10+10 items. Extend to 50+50 for statistical power. The judge will not see the labels."
+}

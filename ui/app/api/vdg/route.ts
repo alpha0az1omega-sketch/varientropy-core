@@ -51,7 +51,7 @@ export async function POST(request: Request) {
 
     if (!query) return NextResponse.json({ error: "Query is required" }, { status: 400 });
 
-    // --- MATHEMATICAL CALCULATION (Always executed) ---
+    // --- MATHEMATICAL CALCULATION ---
     const hypVec = getMathEmbedding(query);
     const hypProbs = softmax(hypVec);
     const entropy_H = calculateEntropy(hypProbs);
@@ -79,10 +79,6 @@ export async function POST(request: Request) {
     let score = entropy_H - mutual_info_I + (variance_F * 0.5);
     score = Math.max(0, Math.min(1, score));
 
-    // --- CRYPTOGRAPHIC PROOF GENERATION (UTF-8 Fixed) ---
-    const crypto = require('crypto');
-    const hashHex = crypto.createHash('sha256').update(query, 'utf8').digest('hex');
-
     // --- AI ANALYSIS (Optional BYOK) ---
     let aiAnalysis = null;
     if (mode === 'ai' && apiKey) {
@@ -102,7 +98,8 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({
+    // --- CORRECTED CRYPTOGRAPHIC PROOF (Hash of Computation) ---
+    const payload = {
       engine: mode === 'ai' ? 'Scientific (AI)' : 'Mathematical (Deterministic)',
       hypothesis: query,
       metrics: {
@@ -112,8 +109,16 @@ export async function POST(request: Request) {
         divergence_score: score.toFixed(4),
       },
       ai_analysis: aiAnalysis,
+    };
+
+    const crypto = require('crypto');
+    // Hash the ENTIRE computation, not just the input
+    const hashOfComputation = crypto.createHash('sha256').update(JSON.stringify(payload), 'utf8').digest('hex');
+
+    return NextResponse.json({
+      ...payload,
       cryptographic_proof: {
-        hash: hashHex,
+        hash_of_computation: hashOfComputation,
         timestamp_utc: new Date().toISOString(),
       }
     }, {

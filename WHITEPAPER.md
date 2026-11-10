@@ -24,6 +24,14 @@ Varientropy uses a modified information-theoretic formula to score novelty:
 ## 4. Addressing the Centralized Oracle Risk
 In V1.0, the minting of `$VNTR` tokens relies on a centralized server to compute the score. We acknowledge this limitation. V2.0 will implement cryptographic signatures (ECDSA) so that the smart contract can verify the server's computation on-chain, moving towards a fully decentralized oracle.
 
+On [DATE], we ran the first blind benchmark:
+- **Corpus**: 20 items (10 true novelty, 10 false novelty), judge blind to labels.
+- **Embedding**: `all-MiniLM-L6-v2` (same as the UI).
+- **Judge**: GPT-4o-mini, temperature 0.
+- **Result**: Spearman ρ = X.XX, p = 0.XXX.
+- **Status**: VALIDATED / NOT VALIDATED.
+- **Proof**: `benchmark/results.json.asc.ots` (OpenTimestamps).
+
 ## 5. Roadmap
 - **V1.5**: File timestamping (PDF, images).
 - **V2.0**: Local-First Protocol using client-side Ed25519 signatures.

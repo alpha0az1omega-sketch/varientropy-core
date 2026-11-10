@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract VarientropyToken is ERC20, Ownable {
     address public minter;
 
-    constructor(address initialOwner) ERC20("Varientropy", "NOVL") Ownable(initialOwner) {
+    constructor(address initialOwner) ERC20("Varientropy", "VNTR") Ownable(initialOwner) {
         minter = initialOwner;
     }
 
@@ -15,6 +15,7 @@ contract VarientropyToken is ERC20, Ownable {
         minter = _minter;
     }
 
+    // Mint conditionnel : seulement si le score de divergence est > 0.80 (8000 en base 10000)
     function mint(address to, uint256 amount, uint256 divergenceScore) external {
         require(msg.sender == minter, "Only minter can mint");
         require(divergenceScore > 8000, "Divergence score too low (must be > 0.80)");

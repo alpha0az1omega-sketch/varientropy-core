@@ -85,7 +85,7 @@ export default function Home() {
       const data = await response.json();
       setResult(data);
     } catch (error) {
-      setResult({ error: "Connection failed. Please try again." });
+      setResult({ error: "Connection failed." });
     } finally {
       setLoading(false);
     }
@@ -96,7 +96,7 @@ export default function Home() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(result, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", `varientropy_proof_${result.cryptographic_proof?.hash?.substring(0, 8)}.json`);
+    downloadAnchorNode.setAttribute("download", `varientropy_proof_${result.cryptographic_proof?.hash_of_computation?.substring(0, 8)}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
@@ -171,7 +171,7 @@ export default function Home() {
             
             <div style={{ backgroundColor: 'rgba(0,0,0,0.85)', border: '1px solid #064e3b', borderRadius: '12px', padding: '20px', fontFamily: 'monospace', fontSize: '0.8rem', boxShadow: '0 0 20px rgba(74, 222, 128, 0.15)' }}>
               <div style={{ marginBottom: '15px' }}>
-                {generateSigil(result.cryptographic_proof?.hash)}
+                {generateSigil(result.cryptographic_proof?.hash_of_computation)}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid #1f2937' }}>
@@ -180,8 +180,8 @@ export default function Home() {
               </div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '12px 0', borderBottom: '1px solid #1f2937' }}>
-                <span style={{ color: '#9ca3af' }}>SHA-256 Proof:</span>
-                <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.65rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash}</span>
+                <span style={{ color: '#9ca3af' }}>SHA-256 Proof (Computation):</span>
+                <span style={{ color: '#d1d5db', wordBreak: 'break-all', fontSize: '0.65rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '4px' }}>{result.cryptographic_proof?.hash_of_computation}</span>
               </div>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px' }}>

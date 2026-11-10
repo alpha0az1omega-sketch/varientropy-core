@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+*.egg-info/
+
+# Node.js
+node_modules/
+.next/
+out/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# Ollama models (never commit model weights)
+*.gguf
+
+# IDE
+.vscode/
+.idea/
+
+# Benchmark intermediates (keep only final signed results)
+benchmark/*.tmp
+benchmark/*.log

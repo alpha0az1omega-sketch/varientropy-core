@@ -1,33 +1,30 @@
 {
   "project": "Varientropy",
-  "version": "0.1.0",
-  "last_updated": "2026-11-10T12:00:00Z",
-  "formula": "H(X) - I(X;Y) + 0.5*Var(f)",
-  "benchmark_v1": {
-    "status": "completed_negative",
-    "timestamp_utc": "2026-11-10T07:42:00Z",
-    "spearman_rho": -0.3568,
-    "p_value": 0.1225,
-    "validated": false,
+  "version": "0.2.0",
+  "last_updated": "2026-11-13T22:00:00Z",
+  "formula": "I(X;Y) - H(X) + 0.5*Var(f)",
+  "benchmark_v17": {
+    "status": "validated",
+    "timestamp_utc": "2026-11-13T21:40:00Z",
+    "spearman_rho": 0.5386,
+    "p_value": 0.01428,
+    "validated": true,
     "embedding_model": "nomic-embed-text",
-    "judge_model": "llama3.2:3b",
+    "judge_model": "gemma3:4b",
     "n_items": 20,
     "corpus_file": "data/benchmark_corpus.json",
     "results_file": "benchmark/results.json",
     "signed_gpg": true,
-    "ots_stamped": true,
-    "commit": "5a3a92a7ac1d7b6ec40c4aefd73f484f15b5b825"
+    "ots_stamped": true
   },
   "next_actions": [
-    "Replace judge with gemma3:4b or few-shot prompt",
-    "Replace max-cosine I with true KL against known_corpus.xml",
-    "Expand corpus to 50 true + 50 false"
+    "Update web UI (ui/) to use Semantic Entropy instead of SHA-512.",
+    "Finalize V2.0 Proof of Novelty smart contract integration.",
+    "Test on a larger corpus (50+ items)."
   ],
   "known_limitations": [
-    "VDG novelty is corpus-relative, not absolute.",
-    "Current score does not separate true from false novelty on 20-item corpus.",
-    "Current judge (llama3.2:3b) is biased on technical hypotheses.",
-    "First results.json (2026-11-10) lacks corpus_sha256 and script_sha256; added in script v1.1.",
+    "VDG novelty is model-relative (depends on the judge LLM).",
+    "Current web UI still uses the old V1.0 formula.",
     "Bitcoin OTS confirmation latency is hours, not seconds."
   ]
 }

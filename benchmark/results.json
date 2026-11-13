@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.7",
+  "timestamp_utc": "2026-11-13T21:28:56.070648+00:00",
+  "embedding_model": "nomic-embed-text",
+  "judge_model": "gemma3:4b",
+  "n_items": 20,
+  "corpus_sha256": "26c679ea79fef20f285574e108412a6a30363ddd52ee7ffd42bdade65a0a4d8d",
+  "script_sha256": "f8434d90517c26fa85189a1aa16dc233f44ca64131e688c238d998de21ebe503",
+  "spearman_rho": 0.538604973085785,
+  "p_value": 0.014279575192168327,
+  "validated": true,
+  "results": [
+    {
+      "label": "true",
+      "text": "A quantum error-correcting code with threshold 1e-3 on 2D ne",
+      "div": -0.04878211083017254,
+      "judge": 6,
+      "H": 0.9973479359477783,
+      "I": 0.9485075630116592,
+      "Var": 0.00011652421189310836
+    },
+    {
+      "label": "true",
+      "text": "A polynomial-time algorithm for graph isomorphism using spec",
+      "div": -0.03915278553714391,
+      "judge": 7,
+      "H": 0.9967965401029727,
+      "I": 0.95756954805221,
+      "Var": 0.00014841302723767508
+    },
+    {
+      "label": "true",
+      "text": "An embedding-based novelty metric invariant to paraphrase an",
+      "div": -0.11365013911119723,
+      "judge": 6,
+      "H": 0.9430182211767381,
+      "I": 0.8277663464224745,
+      "Var": 0.0032034712861326855
+    },
+    {
+      "label": "true",
+      "text": "A decentralized oracle that verifies off-chain computation u",
+      "div": -0.07620297979927282,
+      "judge": 6,
+      "H": 0.9920713756152846,
+      "I": 0.9157043835850132,
+      "Var": 0.0003280244619971916
+    },
+    {
+      "label": "true",
+      "text": "A hash function whose preimage is the Merkle root of a Bitco",
+      "div": -0.12394616436235645,
+      "judge": 3,
+      "H": 0.9842681980436188,
+      "I": 0.8599354390241126,
+      "Var": 0.0007731893142993663
+    },
+    {
+      "label": "true",
+      "text": "A learning algorithm with regret O(\u221aT) without knowing the h",
+      "div": -0.09870119145784774,
+      "judge": 7,
+      "H": 0.9765849228706034,
+      "I": 0.8773634725744024,
+      "Var": 0.0010405176767065085
+    },
+    {
+      "label": "true",
+      "text": "A zero-knowledge proof of matrix multiplication with prover ",
+      "div": -0.04136643615876249,
+      "judge": 7,
+      "H": 0.9907859448061441,
+      "I": 0.9491928407466744,
+      "Var": 0.00045333580141441646
+    },
+    {
+      "label": "true",
+      "text": "A data structure with O(1) worst-case lookup and O(log n) in",
+      "div": -0.13064226383047886,
+      "judge": 4,
+      "H": 0.9713241654173946,
+      "I": 0.8400084841151783,
+      "Var": 0.0013468349434750245
+    },
+    {
+      "label": "true",
+      "text": "A private set intersection protocol with communication O(n).",
+      "div": -0.06498860513277552,
+      "judge": 6,
+      "H": 0.9745796172582077,
+      "I": 0.9090432529466936,
+      "Var": 0.0010955183574771796
+    },
+    {
+      "label": "true",
+      "text": "A polynomial-time separation between BQP and PH.",
+      "div": -0.1046392914816875,
+      "judge": 9,
+      "H": 0.9650739039029743,
+      "I": 0.8597141758807657,
+      "Var": 0.0014408730810422
+    },
+    {
+      "label": "false",
+      "text": "A slightly faster variant of the existing FFT algorithm.",
+      "div": -0.0846754397597845,
+      "judge": 4,
+      "H": 0.9595090571270186,
+      "I": 0.873676325441407,
+      "Var": 0.0023145838516541147
+    },
+    {
+      "label": "false",
+      "text": "A restatement of Newton's second law with different notation",
+      "div": -0.235121389363014,
+      "judge": 3,
+      "H": 0.9734097069474111,
+      "I": 0.7376868240532397,
+      "Var": 0.0012029870623148481
+    },
+    {
+      "label": "false",
+      "text": "A paraphrase of the Central Limit Theorem with examples.",
+      "div": -0.10428712459476133,
+      "judge": 2,
+      "H": 0.8489471482492175,
+      "I": 0.7412548394487286,
+      "Var": 0.0068103684114550565
+    },
+    {
+      "label": "false",
+      "text": "Gradient descent with momentum, already well known.",
+      "div": -0.07570196491081925,
+      "judge": 3,
+      "H": 0.9913299855919177,
+      "I": 0.9154169405919019,
+      "Var": 0.00042216017839295274
+    },
+    {
+      "label": "false",
+      "text": "A restatement of the No Free Lunch theorem.",
+      "div": -0.19703439396385888,
+      "judge": 2,
+      "H": 0.9347996897506133,
+      "I": 0.7361974570770011,
+      "Var": 0.00313567741950663
+    },
+    {
+      "label": "false",
+      "text": "A clone of BERT with a different name.",
+      "div": -0.18294794121637212,
+      "judge": 3,
+      "H": 0.9509916984762234,
+      "I": 0.7669854980405258,
+      "Var": 0.0021165184386509736
+    },
+    {
+      "label": "false",
+      "text": "A Bitcoin fork with a changed block time.",
+      "div": -0.10371649681289558,
+      "judge": 4,
+      "H": 0.9752335890836704,
+      "I": 0.8709687091907741,
+      "Var": 0.0010967661600015455
+    },
+    {
+      "label": "false",
+      "text": "A REST wrapper around an existing embedding API.",
+      "div": -0.09093080275557816,
+      "judge": 4,
+      "H": 0.9359019441084246,
+      "I": 0.8433537004774447,
+      "Var": 0.0032348817508034895
+    },
+    {
+      "label": "false",
+      "text": "A sentiment classifier trained on IMDB with 95% accuracy.",
+      "div": -0.055682209871759585,
+      "judge": 4,
+      "H": 0.9956655248986125,
+      "I": 0.9398780470368255,
+      "Var": 0.00021053598005472463
+    },
+    {
+      "label": "false",
+      "text": "A chatbot that summarizes papers using GPT-4 with a new prom",
+      "div": -0.08899915074657094,
+      "judge": 4,
+      "H": 0.9897095150933509,
+      "I": 0.9004672833922405,
+      "Var": 0.0004861619090790234
+    }
+  ]
+}
